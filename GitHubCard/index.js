@@ -31,22 +31,38 @@ const followersArray = [];
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
-<div class="card">
-  <img src={image url of user} />
-  <div class="card-info">
-    <h3 class="name">{users name}</h3>
-    <p class="username">{users user name}</p>
-    <p>Location: {users location}</p>
-    <p>Profile:
-      <a href={address to users github page}>{address to users github page}</a>
+<div class="card">  const newCard
+  <img src={image url of user} /> const newImg
+  <div class="card-info"> const cardInfo
+    <h3 class="name">{users name}</h3> const name
+    <p class="username">{users user name}</p> const userName
+    <p>Location: {users location}</p> const Location
+    <p>Profile: const profile
+      <a href={address to users github page}>{address to users github page}</a> const profileLink
     </p>
-    <p>Followers: {users followers count}</p>
-    <p>Following: {users following count}</p>
-    <p>Bio: {users bio}</p>
+    <p>Followers: {users followers count}</p> const followers
+    <p>Following: {users following count}</p> const following
+    <p>Bio: {users bio}</p> const bio
   </div>
 </div>
-
 */
+
+const cardsContainer = document.querySelector('.cards');
+
+function cardCreator(obj) {
+  const newCard = document.createElement('div');
+  const newImg = document.createElement('img');
+  const cardInfo = document.createElement('div');
+  const name = document.createElement('h3');
+  const userName = document.createElement('p');
+  const location = document.createElement('p');
+  const profile = document.createElement('p');
+  const profileLink = document.createElement('a');
+  const followers = document.createElement('p');
+  const following = document.createElement('p');
+  const bio = document.createElement('p');
+}
+
 
 /* List of LS Instructors Github username's:
   tetondan
