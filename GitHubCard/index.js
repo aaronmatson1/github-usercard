@@ -2,8 +2,19 @@
            (replacing the palceholder with your Github name):
            https://api.github.com/users/<your name>
 */
-const axiosPromise = axios.get("https://api.github.com/users/aaronmatson1");
-console.log(axiosPromise);
+axios.get("https://api.github.com/users/aaronmatson1")
+.then(response => {
+  console.log(response)
+  console.log(response.data)
+
+  // let cards = document.querySelector('.cards');
+  let newCard = createCard(response.data);
+  cards.append(newCard);
+})
+.catch( error => {
+  // console.log('data was not returned')
+  console.log(error);
+});
 
 /* Step 2: Inspect and study the data coming back, this is YOUR
    github info! You will need to understand the structure of this
@@ -26,43 +37,143 @@ console.log(axiosPromise);
           user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+let followersArray = [
+  'eaczechova',
+  'pjose92',
+  'Tereamarie',
+  'troopaloop8',
+  'bigknell'
+];
+
+followersArray.forEach(el => {
+  axios.get(`https://api.github.com/users/${el}`)
+  .then(response => {
+    // let cards = document.querySelector('.cards');
+    let followersAll = createCard(response.data)
+    cards.append(followersAll)
+  })
+})
+
+
+
+axios
+  .get('https://api.github.com/users/aaronmatson1/followers')
+  .then(response => {
+    response.data.forEach(object => {
+      axios
+        .get(`https://api.github.com/users/${object}`)
+        .then(response => {
+          cards.append(response.data)
+        })
+    })
+
+  })
+    .catch(err => err)
+
+// followersArray.forEach(follower => {
+//   axios.get(`https://api.github.com/users/${follower}`)
+//   .then(response => {
+//     // let cards = document.querySelector('.cards');
+//     let followers = cardInfoFollowers(response.data)
+//     cards.append(followers)
+//   })
+// })
+
 
 /* Step 3: Create a function that accepts a single object as its only argument,
           Using DOM methods and properties, create a component that will return the following DOM element:
 
-<div class="card">  const newCard
-  <img src={image url of user} /> const newImg
-  <div class="card-info"> const cardInfo
-    <h3 class="name">{users name}</h3> const name
-    <p class="username">{users user name}</p> const userName
-    <p>Location: {users location}</p> const Location
+<div class="card">
+  <img src={image url of user} />
+  <div class="card-info">
+    <h3 class="name">{users name}</h3>
+    <p class="username">{users user name}</p>
+    <p>Location: {users location}</p>
     <p>Profile: const profile
-      <a href={address to users github page}>{address to users github page}</a> const profileLink
+      <a href={address to users github page}>{address to users github page}</a>
     </p>
-    <p>Followers: {users followers count}</p> const followers
-    <p>Following: {users following count}</p> const following
-    <p>Bio: {users bio}</p> const bio
+    <p>Followers: {users followers count}</p>
+    <p>Following: {users following count}</p>
+    <p>Bio: {users bio}</p>
   </div>
 </div>
 */
 
-const cardsContainer = document.querySelector('.cards');
+// funtion that takes in one object
+function createCard(object){
+  // creating elements
+  let card = document.createElement('div'),
+      cardImg = document.createElement('img'),
+      cardInfo = document.createElement('div'),
+      cardInfoName = document.createElement('h3'),
+      cardInfoUsername = document.createElement('p'),
+      cardInfoLocation = document.createElement('p'),
+      cardInfoProfile = document.createElement('p'),
+      cardInfoProfileLink = document.createElement('a'),
+      cardInfoFollowers = document.createElement('p'),
+      cardInfoFollowing = document.createElement('p'),
+      cardInfoBio = document.createElement('p');
 
-function cardCreator(obj) {
-  const newCard = document.createElement('div');
-  const newImg = document.createElement('img');
-  const cardInfo = document.createElement('div');
-  const name = document.createElement('h3');
-  const userName = document.createElement('p');
-  const location = document.createElement('p');
-  const profile = document.createElement('p');
-  const profileLink = document.createElement('a');
-  const followers = document.createElement('p');
-  const following = document.createElement('p');
-  const bio = document.createElement('p');
+      // adding class(s) where needed
+      card.classList.add('card');
+      cardInfo.classList.add('card-info');
+      cardInfoName.classList.add('name');
+      cardInfoUsername.classList.add('user-name');
+
+      // structuring of elements according to example
+      card.append(cardImg);
+      card.append(cardInfo);
+
+        cardInfo.append(cardInfoName);
+        cardInfo.append(cardInfoUsername);
+        cardInfo.append(cardInfoLocation);
+        cardInfo.append(cardInfoProfile);
+          cardInfoProfile.append(cardInfoProfileLink);
+        cardInfo.append(cardInfoFollowers);
+        cardInfo.append(cardInfoFollowing);
+        cardInfo.append(cardInfoBio);
+
+      // adding content where needed
+      cardInfoProfileLink.href = object.html_url;
+      cardImg.src = object.avatar_url;
+      cardInfoName.textContent = object.name;
+      cardInfoUsername.textContent = object.login;
+      cardInfoLocation.textContent = `Location: ${object.location}`;
+      // cardInfoProfile.textContent = `Profile: `
+      // cardInfoProfile.textContent = `Profile: ${cardInfoProfileLink}`;
+      // cardInfoProfileLink.textContent = object.html_url;
+      // cardInfoProfile.textContent = `Profile: ${cardInfoProfileLink}`;//need to test solutions
+
+      cardInfoProfileLink.textContent = object.html_url;
+      cardInfoProfile.textContent = `Profile: ${cardInfoProfileLink}`;//need to test solutions
+
+
+      //cardInfoProfile.textContent = `Profile: ${</b>}${cardInfoProfileLink}`;
+      cardInfoFollowers.textContent = `Followers: ${object.followers}`;
+      cardInfoFollowing.textContent = `Following: ${object.following}`;
+      cardInfoBio.textContent = `Bio: ${object.bio}`;
+
+      return card;
 }
+let cards = document.querySelector('.cards');
 
+
+/*
+<div class="card">
+  <img src={image url of user} />
+  <div class="card-info">
+    <h3 class="name">{users name}</h3>
+    <p class="username">{users user name}</p>
+    <p>Location: {users location}</p>
+    <p>Profile:
+      <a href={address to users github page}>{address to users github page}</a>
+    </p>
+    <p>Followers: {users followers count}</p>
+    <p>Following: {users following count}</p>
+    <p>Bio: {users bio}</p>
+  </div>
+</div>
+*/
 
 /* List of LS Instructors Github username's:
   tetondan
